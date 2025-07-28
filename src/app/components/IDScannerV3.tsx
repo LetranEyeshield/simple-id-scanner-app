@@ -5,13 +5,6 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Tesseract from "tesseract.js";
-// import axios from "axios";
-
-const videoConstraints = {
-  facingMode: { exact: "environment" },
-  width: { ideal: 720 },
-  height: { ideal: 1280 },
-};
 
 export default function IDScannerV3() {
   const webcamRef = useRef<Webcam>(null);
@@ -24,6 +17,7 @@ export default function IDScannerV3() {
   const captureImage = () => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) runOCR(imageSrc);
+    console.log("Logs for imageSrc: ", imageSrc);
   };
 
   const runOCR = async (img: string) => {
@@ -38,6 +32,7 @@ export default function IDScannerV3() {
       const extracted = result.data.text;
       setText(extracted);
       parseOCR(extracted);
+      console.log("Logs for extracted: ", extracted);
     } catch (err) {
       console.error("OCR Error:", err);
     } finally {
@@ -45,11 +40,38 @@ export default function IDScannerV3() {
     }
   };
 
+  //   const parseOCR = (raw: string) => {
+  //     const lines = raw.toUpperCase().split("\n");
+
+  //     lines.forEach((line, index) => {
+  //       if (line.includes("JUAN") && line.includes("CRUZ")) {
+  //         setFullName(line.trim());
+  //       }
+
+  //       if (line.includes("DOB") || line.includes("BIRTH")) {
+  //         const match = line.match(/\d{2}[\/\-]\d{2}[\/\-]\d{4}/);
+  //         if (match) setBirthDate(match[0]);
+  //       }
+
+  //       if (
+  //         line.includes("STREET") ||
+  //         line.includes("BRGY") ||
+  //         line.includes("CITY")
+  //       ) {
+  //         const nextLine = lines[index + 1];
+  //         if (nextLine && !nextLine.match(/NAME|DOB|SEX|ID|AGE/i)) {
+  //           setAddress(nextLine.trim());
+  //         }
+  //       }
+  //       console.log("Logs for lines: ", lines);
+  //     });
+  //   };
+
   const parseOCR = (raw: string) => {
     const lines = raw.toUpperCase().split("\n");
 
     lines.forEach((line, index) => {
-      if (line.includes("JUAN") && line.includes("CRUZ")) {
+      if (line.includes("NAME")) {
         setFullName(line.trim());
       }
 
@@ -68,9 +90,9 @@ export default function IDScannerV3() {
           setAddress(nextLine.trim());
         }
       }
+      console.log("Logs for lines: ", lines);
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -108,11 +130,15 @@ export default function IDScannerV3() {
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        // videoConstraints={videoConstraints}
+        // videoConstraints={{
+        //   width: { ideal: 1280 },
+        //   height: { ideal: 720 },
+        //   facingMode: { ideal: "environment" },
+        // }}
         videoConstraints={{
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          facingMode: "environment",
         }}
         className="rounded-lg shadow-md w-full max-w-md"
       />
