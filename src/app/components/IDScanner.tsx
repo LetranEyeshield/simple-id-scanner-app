@@ -61,23 +61,23 @@ export default function IDScanner() {
     <div className="flex flex-col items-center gap-4 p-4">
       {!image && (
         <>
-          {/* <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            className="rounded-md border"
-          /> */}
           <Webcam
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
+            className="rounded-md border"
+          />
+          {/* <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
             videoConstraints={{
-              width: 425,
-              height: 300,
+              width: 1280,
+              height: 720,
               facingMode: "environment", // mobile rear cam
             }}
             className="rounded-md border"
-          />
+          /> */}
 
           <button
             onClick={capture}
